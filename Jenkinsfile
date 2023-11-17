@@ -39,6 +39,14 @@ pipeline {
       }
     }
 
+    stage('Deploy the code on tomcat server') {
+      steps{
+        sshagent(['ec2-worker']) {
+          sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/pipeline-deploy/target/ABCtechnologies-1.0.war ec2-user@54.166.197.171:/opt/tomcat/webapps'
+        }
+      }
+    }
+
     stage('Build docker image') {
       steps {
         script {
@@ -52,14 +60,6 @@ pipeline {
           docker.withRegistry('', registryCredential) {
             sh 'docker push ngwaabanjong/mfgapp2'
           }
-        }
-      }
-    }
-
-    stage('Deploy the code on tomcat server') {
-      steps{
-        sshagent(['ec2-worker']) {
-          sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/pipeline-deploy/target/ABCtechnologies-1.0.war ec2-user@54.166.197.171:/opt/tomcat/webapps'
         }
       }
     }
