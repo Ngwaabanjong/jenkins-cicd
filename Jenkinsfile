@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     dockerImage = ''
-    registry = 'ngwaabanjong/abc-app1'
+    registry = 'ngwaabanjong/mfgapp2'
     registryCredential = 'hub-key'
   }
   tools {
@@ -15,7 +15,7 @@ pipeline {
         checkout scmGit(branches: [
           [name: '*/main']
         ], extensions: [], userRemoteConfigs: [
-          [credentialsId: 'git-classic-token', url: 'https://github.com/Ngwaabanjong/private-abc-prj.git']
+          [credentialsId: 'classic-token', url: 'https://github.com/Ngwaabanjong/jenkins-cicd']
         ])
         sh 'mvn clean install'
       }
@@ -42,7 +42,7 @@ pipeline {
     stage('Build docker image') {
       steps {
         script {
-          sh 'docker build -t ngwaabanjong/abc-app1 .'
+          sh 'docker build -t ngwaabanjong/mfgapp2 .'
         }
       }
     }
@@ -50,31 +50,16 @@ pipeline {
       steps {
         script {
           docker.withRegistry('', registryCredential) {
-            sh 'docker push ngwaabanjong/abc-app1'
+            sh 'docker push ngwaabanjong/mfgapp2'
           }
         }
       }
     }
 
-    // stage('Deploy to Kubernetes with Ansible') {
-    //   steps {
-    //     script {  
-    //       ansiblePlaybook becomeUser: 'ansible', credentialsId: 'ubuntu-key', inventory: '/var/lib/jenkins/workspace/abc-prj/deployment.yml', playbook: '/home/ansible/deployment.yaml', sudoUser: 'ansible'
-    //     }
-    //   }
-    // }
     stage('Deploy the code on tomcat server') {
       steps{
-        sshagent(['user-key']) {
-          sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/abc-prj/target/ABCtechnologies-1.0.war ec2-user@54.166.197.171:/opt/tomcat/webapps'
-        }
-      }
-    }
-    
-    stage('Deploy to Kubernetes with Ansible') {
-      steps {
-        script {  
-          sh "ansible-playbook deployment.yaml"
+        sshagent(['ec2-worker']) {
+          sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/pipeline-deploy/target/ABCtechnologies-1.0.war ec2-user@54.166.197.171:/opt/tomcat/webapps'
         }
       }
     }
