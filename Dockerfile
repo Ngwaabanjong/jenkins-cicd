@@ -1,3 +1,6 @@
-FROM tomcat:8
-# take the war and copy the webapps to tomcat
-Copy target/*.war /usr/local/tomcat/webapps/XYZtechnologies-1.0.war
+FROM openjdk:11
+EXPOSE 61000
+ADD target/ABCtechnologies-1.0.war ABCtechnologies-1.0.war
+ENTRYPOINT ["java","-war","ABCtechnologies-1.0.war"]
+
+

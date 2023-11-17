@@ -15,51 +15,66 @@ pipeline {
         checkout scmGit(branches: [
           [name: '*/main']
         ], extensions: [], userRemoteConfigs: [
-          [credentialsId: 'git-classic-token', url: 'https://github.com/Ngwaabanjong/final-grade-prj2.git']
+          [credentialsId: 'git-classic-token', url: 'https://github.com/Ngwaabanjong/private-abc-prj.git']
         ])
-        sh 'mvn clean package'
+        sh 'mvn clean install'
       }
     }
 
-
-    stage('Build Docker image') {
+    stage('compile') {
       steps {
-        script {  
-          sh 'docker build -t ngwaabanjong/xyz-app .'
+        echo 'compiling the application...'
+      }
+    }
+
+    stage('test') {
+      steps {
+        echo 'testing the application...'
+      }
+    }
+
+    stage('Package the code') {
+      steps {
+        sh 'mvn package'
+      }
+    }
+
+    stage('Build docker image') {
+      steps {
+        script {
+          sh 'docker build -t ngwaabanjong/abc-app1 .'
         }
       }
     }
-
     stage('Push image to Hub') {
       steps {
         script {
           docker.withRegistry('', registryCredential) {
-            sh 'docker push ngwaabanjong/xyz-app'
+            sh 'docker push ngwaabanjong/abc-app1'
           }
         }
       }
     }
 
-    stage('Deploy war file to tomcat server') {
+    // stage('Deploy to Kubernetes with Ansible') {
+    //   steps {
+    //     script {  
+    //       ansiblePlaybook becomeUser: 'ansible', credentialsId: 'ubuntu-key', inventory: '/var/lib/jenkins/workspace/abc-prj/deployment.yml', playbook: '/home/ansible/deployment.yaml', sudoUser: 'ansible'
+    //     }
+    //   }
+    // }
+    stage('Deploy the code on tomcat server') {
       steps{
-        sshagent(['ec2-key']) {
-          sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/ansible/target/XYZtechnologies-1.0.war ec2-user@54.166.197.171:/opt/tomcat/webapps'
+        sshagent(['user-key']) {
+          sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/abc-prj/target/ABCtechnologies-1.0.war ec2-user@54.166.197.171:/opt/tomcat/webapps'
         }
       }
     }
-
-    stage('Deploy docker with Ansible') {
+    
+    stage('Deploy to Kubernetes with Ansible') {
       steps {
         script {  
-          ansiblePlaybook credentialsId: 'ec2-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'servers.env', playbook: 'ansible1.yml'
-        }
-      }
-    }
-
-    stage('Deploy K8s with Ansible') {
-      steps {
-        script {  
-          ansiblePlaybook credentialsId: 'ec2-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'servers.env', playbook: 'ansible2.yml'
+          sh "ansible-playbook deployment.yaml"
         }
       }
     }

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abc-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: abc-v1
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: abc-v1
+        version: v1
+    spec:
+      containers:
+        - image: ngwaabanjong/abc-prj
+          imagePullPolicy: Always
+          name: hostname
+          resources:
+            limits:
+              cpu: 256m
+              memory: 128Mi
+      nodeSelector:
+        nodetype: generalpurpose
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: abc-v1
+  name: abc-v1
+spec:
+  ports:
+    - name: web
+      port: 61000
+      protocol: TCP
+      targetPort: 61000
+  selector:
+    app: abc-v1

@@ -1,24 +1,19 @@
 <html>
 <body>
-<h2>Welcome to MFG technologies</h2>
-  <h3>This is admin Module</h3>
-  <button name="Add User" value="Add User" type="button" onclick="addUser()">Add User</button>  
+<h2>Welcome to ABC technologies</h2>
+<h3>This is retail portal</h3>
+<button name="Add Product" value="Add Product" type="button" onclick="addProduct()">Add Product</button>  
 <script>  
-function addUser(){  
+function addProduct(){  
 alert("You will be navigated to Add module");  
 }  
 </script>  
-    <button name="View User" value="View User" type="button" onclick="viewUser()">View User</button>  
+    <button name="View Product" value="View Product" type="button" onclick="viewProduct()">View Product</button>  
 <script>  
-function viewUser(){  
+function viewProduct(){  
 alert("You will be navigated to view module");  
 }
-  </script>
-    <button name="Delete User" value="Delete User" type="button" onclick="deleteUser()">Delete User</button>  
-<script>  
-function deleteUser(){  
-alert("You will be navigated to delete module");  
-}  
 </script>
 </body>
 </html>
+

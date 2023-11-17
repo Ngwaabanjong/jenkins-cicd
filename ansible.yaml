@@ -1,0 +1,19 @@
+- hosts: localhost
+  become: true
+  become_user: root
+  tasks:
+  - name: Deploy Kubernetes Deployment
+    k8s:
+      state: present
+      namespace: default
+      src: /home/ansible/deployment.yaml 
+    
+
+
+
+  # - name: Deploy Kubernetes Deployment
+  #   k8s:
+  #     state: present
+  #     namespace: default
+  #     src: /var/lib/jenkins/workspace/abc-prj/deployment.yml 
+  #     dest: /home/ansible/deployment.yaml
