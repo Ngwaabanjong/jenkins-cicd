@@ -1,7 +1,7 @@
-# abctechnologies code
-"Project 1" 
-Created By - Ignatius Ngwaabanjong
-Topic:
+# Demo - abc technologies code
+**"Project 1"** 
+- Created By - Ignatius Ngwaabanjong
+  ## Topic:
 This is a Jenkins pipeline that will build a Java base application with maven, compile, test, build a docker image and push to docker registry, deploy the build artifacts to tomcat server, and use ansible to deploy a kubernetes cluster at the same time. 
 
 # 1 Install plugins on Jenkins
@@ -19,23 +19,25 @@ This is a Jenkins pipeline that will build a Java base application with maven, c
 
 # 2 On Jenkins 
 - Global Configuration
-Give a path to git and install automatically (/usr/bin/git)
-Give a name to maven and install automatically
+- Give a path to git and install automatically (/usr/bin/git)
+- Give a name to maven and install automatically
 image.png
 
 
 # 3 Configure DockerHub login and env on Jenkinsfile
-On Docker registry Setting, create a token, use the token as password with your username when creating a key in Jenkins.
-Define the Docker Registry Env is the Jenkinsfile
+- On Docker registry Setting, create a token, use the token as password with your username when creating a key in Jenkins.
+- Define the Docker Registry Env is the Jenkinsfile
+  ```groovy
   environment {
     dockerImage = ''
     registry = 'ngwaabanjong/abc-prj' #repo-name/image-m=name
-    registryCredential = 'hub-key2'   #Docker Hub key defined in Jenkins 
-
+    registryCredential = 'hub-key2'   #Docker Hub key defined in Jenkins
+  ```
+  
 # 4 Configure git Checkout using Jenkins Syntax
-On Git -> Settings -> Developer Settings -> Create token (classic). 
-On Jenkins Create credentials with username as email and password as token.
-On Jenkins Syntax: select checkout version control, insert git URL, select credentials and create Syntax
+- On Git -> Settings -> Developer Settings -> Create token (classic). 
+- On Jenkins Create credentials with username as email and password as token.
+- On Jenkins Syntax: select checkout version control, insert git URL, select credentials and create Syntax
 image.png
 
 # 5 Deploying to tomcat server
@@ -47,13 +49,14 @@ image.png
 
 # 6 Deploying kubernetes using ansible playbook
 Make sure these are installed properly: 
-ansible
-docker
-kubeadm 
-kubelet
-kubectl 
+- ansible
+- docker
+- kubeadm 
+- kubelet
+- kubectl 
 - Use ansible user for your deployment. Make sure ansible user is configured.
 - Create a manifest file and store it in /home/ansible/deployment.yml
+- 
 File Syntax;
 
 # 7 On Jenkins - Configure Pipeline
